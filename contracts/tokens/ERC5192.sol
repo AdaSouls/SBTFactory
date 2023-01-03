@@ -19,7 +19,7 @@ contract ERC5192 is IERC5192, ERC721, ERC721URIStorage, Ownable {
 
   constructor(string memory _tokenName, string memory _tokenSymbol, bool _owner) ERC721(_tokenName, _tokenSymbol) {
     _transferOwnership(tx.origin);
-    if(!_owner) renounceOwnership();
+    if(_owner == false && owner() == tx.origin) renounceOwnership();
   }
 
   function safeMint(address to, string memory uri) public payable returns(uint256) {
