@@ -1,3 +1,6 @@
+require('dotenv').config()
+const { MNEMONIC } = process.env;
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -56,8 +59,25 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
+  contracts_directory: './contracts',
 
   networks: {
+    milkomeda: {
+      provider: () => new HDWalletProvider(MNEMONIC, `https://rpc-devnet-cardano-evm.c1.milkomeda.com/`),
+      network_id: 200101,       // Goerli's id
+      gas: 5500000,
+      confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
+      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    }
+        // advanced: {
+    //   port: 8777,             // Custom port
+    //   network_id: 1342,       // Custom network
+    //   gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
+    //   gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
+    //   from: <address>,        // Account to send transactions from (default: accounts[0])
+    //   websocket: true         // Enable EventEmitter interface for web3 (default: false)
+    // },
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
     // You should run a client (like ganache, geth, or parity) in a separate terminal
@@ -108,13 +128,12 @@ module.exports = {
     solc: {
       version: "0.8.17",      // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
-      // settings: {          // See the solidity docs for advice about optimization and evmVersion
-      //  optimizer: {
-      //    enabled: false,
-      //    runs: 200
-      //  },
-      //  evmVersion: "byzantium"
-      // }
+      settings: {          // See the solidity docs for advice about optimization and evmVersion
+        optimizer: {
+          enabled: false,
+          runs: 200
+        }
+      }
     }
   },
 
