@@ -23,6 +23,7 @@ contract ERC5192 is IERC5192, ERC721, ERC721URIStorage, Ownable {
   }
 
   function safeMint(address to, string memory uri) public payable returns(uint256) {
+    onlyContractOwnerIfExists();
     uint256 tokenId = _tokenIdCounter.current();
     _safeMint(to, tokenId);
     _setTokenURI(tokenId, uri);
@@ -75,11 +76,7 @@ contract ERC5192 is IERC5192, ERC721, ERC721URIStorage, Ownable {
 
 
   function onlyTokenOwnerOrContractOwner(uint256 tokenId) view internal {
-    if(owner() != address(0)) {
-      require(owner() == msg.sender, "sender is not the owner of the contract");
-    } else {
-      require(ownerOf(tokenId) == msg.sender, "sender is not the owner of the token");
-    }
+    require(owner() == msg.sender || ownerOf(tokenId) == msg.sender, "sender is not the owner of the contract or the owner of the token");
   }
 
   function onlyContractOwnerIfExists() view internal {
